@@ -7,6 +7,8 @@ use Mastercat\Bots\Repositories\PdoSubscriberRepository;
 use Mastercat\Bots\Subscribers\ViberSubscriber;
 use Mastercat\Bots\Config\VB_CONF;
 
+require_once 'vendor/autoload.php';
+
 
 header("Content-Type: application/json;charset=utf8");
 

@@ -7,8 +7,10 @@ use Mastercat\Bots\Repositories\PdoSubscriberRepository;
 use Mastercat\Bots\Subscribers\TelegramSubscriber;
 use Mastercat\Bots\Config\TG_CONF;
 
+require_once 'vendor/autoload.php';
 
 header("Content-Type: application/json;charset=utf8");
+
 
 $botInreface = new TelegramBotInreface([
 	'auth_token'	=> TG_CONF::auth_token, 
