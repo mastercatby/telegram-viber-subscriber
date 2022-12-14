@@ -1,0 +1,16 @@
+<?php
+
+class VB_CONF {
+
+	const auth_token	= '<api-token>';
+	const webhook		= 'index.php';
+	const send_name		= 'Mastercat Bot';
+	const admin_id		= '<admin userid>';
+	const debug			= true;
+	const log_file		= 'data/vb_log.txt';
+	const lang			= 'ru';
+	const dbconnect		= 'mysql:dbname=<database>;host=localhost';
+	const dbuser		= '<user>';
+	const dbpass		= '<passw>';
+
+}
