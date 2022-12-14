@@ -4,3 +4,6 @@ viber/config.php
 src/Config/TG_CONF.php
 src/Config/VB_CONF.php
 .htaccess
+psalm.xml
+composer.lock
+composer.json
