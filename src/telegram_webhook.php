@@ -1,5 +1,7 @@
 <?php
-require_once('config.php');
+
+namespace Mastercat\Bots;
+use Mastercat\Bots\Config\TG_CONF;
 	
 $http_path = explode('/', $_SERVER['REQUEST_URI']);
 array_pop($http_path);

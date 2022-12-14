@@ -1,12 +1,13 @@
 <?php
 
+namespace Mastercat\Bots\Config;
+
 class TG_CONF {
 
 	const auth_token	= '<api-token>';
-	const webhook		= 'index.php';
+	const webhook		= 'telegrambot12345.php';
 	const admin_id		= '<admin userid>';
 	const debug			= true;
-	const log_file		= 'data/tg_log.txt';
 	const lang			= 'ru';
 	const dbconnect		= 'mysql:dbname=<database>;host=localhost';
 	const dbuser		= '<user>';

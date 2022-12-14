@@ -1,0 +1,15 @@
+{
+    "name": "mastercat/bots",
+    "autoload": {
+        "psr-4": {
+            "Mastercat\\Bots\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "mastercatby",
+            "email": "mastercatby@gmail.com"
+        }
+    ],
+    "require": {}
+}

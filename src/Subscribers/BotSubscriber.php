@@ -1,119 +1,10 @@
 <?php 
 
-
-abstract class McBotInreface {
-
-	abstract public function getInput() : ?object;
-	abstract public function getEvent() : string;
-	abstract public function sendText(string $receiver_id, string $text, bool $echo = false) : bool;
-	abstract public function sendKeyboard(string $receiver_id, string $text, array $buttons, bool $echo = false) : bool;
-	abstract public function sendWebhookResponse() : bool;
-
-}
+namespace Mastercat\Bots\Subscribers;
+use Mastercat\Bots\Repositories\SubscriberRepository;
 
 
-abstract class McBotController {
-
-	protected ?McBotInreface $botInterface;
-	 
-
-	public function __construct(array $config = array()) {
-
-		$this->botInterface = null;
-
-	}
-
-
-	public function setBotInterface(McBotInreface $botInterface) : void {
-
-		$this->botInterface = $botInterface;
-
-	}
-
-
-	public function dispatch() : bool {
-
-		if (!$this->botInterface) {return false;}	
-
-		$event = $this->botInterface->getEvent();
-		//$res = true; 
-		switch ($event) {
-
-			case 'webhook' :
-				$res = $this->onSetWebhook();
-				break;
-			case 'subscribed' :
-				$res = $this->onSubscribed();
-				break;
-			case 'unsubscribed' :
-				$res = $this->onUnsubscribed();
-				break;
-			case 'conversation_started' :
-				$res = $this->onConversationStarted();
-				break;
-			case 'message' :
-				$res = $this->onMessage();
-				break;
-			case 'action' :
-				$res = $this->onAction();
-				break;
-			case 'delivered' :
-				$res = $this->onDelivered();
-				break;
-			case 'seen' :
-				$res = $this->onSeen();
-				break;
-			case 'client_status' :
-				$res = $this->onClientStatus();
-				break;
-			case 'failed' :
-				$res = $this->onFailed();
-				break;
-			default:
-				$res = $this->onDefault();
-		}
-		
-		return $res;
-		
-	}
-	
-
-	protected function onSetWebhook() : bool {
-
-		if (!$this->botInterface) {
-			return false;
-		} else {
-			return $this->botInterface->sendWebhookResponse();
-		}
-		
-	}
-
-
-	protected function onSubscribed() : bool {return true;}
-	protected function onUnsubscribed() : bool {return true;}
-	protected function onConversationStarted() : bool {return true;}
-	protected function onMessage() : bool {return true;}
-	protected function onAction() : bool {return true;}
-	protected function onDelivered() : bool {return true;}
-	protected function onSeen() : bool {return true;}
-	protected function onClientStatus() : bool {return true;}
-	protected function onFailed() : bool {return true;}
-	protected function onDefault() : bool {return true;}
-	
-	
-}
-
-
-abstract class McSubscriberRepository {
-
-	abstract public function loadSubscriber(string $user_id, int $subscriber_type) : ?array;
-	abstract public function createSubscriber(array $data) : bool;
-	abstract public function updateSubscriber(array $data) : bool;
-
-}
-
-
-class McSubscriber {
+class BotSubscriber {
 
 	protected string $user_id;
 	protected string $name;
@@ -121,7 +12,7 @@ class McSubscriber {
 	protected string $phone;
 	protected bool $subscribed;
 	protected int $flags;
-	protected ?McSubscriberRepository $repository;
+	protected ?SubscriberRepository $repository;
 	
 
 	public function __construct() {
@@ -137,7 +28,7 @@ class McSubscriber {
 	}
 	
 
-	public function setRepository(McSubscriberRepository $repository) : void {
+	public function setRepository(SubscriberRepository $repository) : void {
 	
 		$this->repository = $repository;
 

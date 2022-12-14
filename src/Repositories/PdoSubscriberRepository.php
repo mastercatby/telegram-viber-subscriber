@@ -1,14 +1,15 @@
 <?php 
 
-require_once('botbase.php');
+namespace Mastercat\Bots\Repositories;
+use Mastercat\Bots\Repositories\SubscriberRepository;
 
 
-class McPdoSubscriberRepository extends McSubscriberRepository {
+class PdoSubscriberRepository extends SubscriberRepository {
 
-	protected ?PDO $db = null;
+	protected ?\PDO $db = null;
 	
 
-	public static function Factory(string $dbconnect, string $dbuser, string $dbpass) : McPdoSubscriberRepository {
+	public static function Factory(string $dbconnect, string $dbuser, string $dbpass) : PdoSubscriberRepository {
 		
 		$res = new self();
 		$res->connect($dbconnect, $dbuser, $dbpass);
@@ -45,7 +46,7 @@ class McPdoSubscriberRepository extends McSubscriberRepository {
 
 	protected function connect(string $dbconnect, string $dbuser, string $dbpass) : bool {
 
-		$this->db = new PDO($dbconnect, $dbuser, $dbpass);
+		$this->db = new \PDO($dbconnect, $dbuser, $dbpass);
 		return (bool)($this->db);
 	}
 
@@ -55,7 +56,7 @@ class McPdoSubscriberRepository extends McSubscriberRepository {
 		if (!$this->db) {return null;}
 
 		$res = null;
-		$sth = $this->db->prepare($query, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
+		$sth = $this->db->prepare($query, [\PDO::ATTR_CURSOR => \PDO::CURSOR_FWDONLY]);
 		if ($sth !== false) {
 			if ($sth->execute($args)) {
 				$res = $sth->fetchAll();
