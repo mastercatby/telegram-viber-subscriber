@@ -15,9 +15,9 @@ class ViberBotInreface extends BotInreface {
 	public function __construct(array $config = array()) {
 
 		$this->input		= null;
-		$this->auth_token	= (string)($config['auth_token']);
-		$this->send_name	= (string)($config['send_name']);
-		$this->debug		= (bool)($config['debug']);
+		$this->auth_token	= $config['auth_token'];
+		$this->send_name	= $config['send_name'];
+		$this->debug		= $config['debug'];
 		
 		$this->loadInput();
 	}	
@@ -41,8 +41,8 @@ class ViberBotInreface extends BotInreface {
 	
 	public function getEvent() : string {
 	
-		if ((isset($this->input)) && (isset($this->input->event))) {
-			return (string)($this->input->event);
+		if (isset($this->input->event)) {
+			return ($this->input->event);
 		} else {
 			return '';
 		}

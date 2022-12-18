@@ -14,9 +14,9 @@ class ViberBotController extends BotController {
 	
 	public function __construct(array $config = array()) {
 
-		parent::__construct($config);
+		parent::__construct();
 		
-		$this->admin_id = (string)($config['admin_id']);
+		$this->admin_id = $config['admin_id'];
 		$this->subscriber = null;
 		
 	}
@@ -35,14 +35,14 @@ class ViberBotController extends BotController {
 
 		$input = $this->botInterface->getInput();
 		
-		if ((!is_object($input)) || (!is_object($input->user)) || (!isset($input->user->id))) {return false;}
-		$this->subscriber->checkSubscriber((string)$input->user->id, (string)$input->user->name);
+		if (!isset($input->user->id)) {return false;}
+		$this->subscriber->checkSubscriber($input->user->id, $input->user->name ?? null);
 		
-		$this->botInterface->sendText((string)$input->user->id, VB_MSG::SUBSCRIBE_MSG);
+		$this->botInterface->sendText($input->user->id, VB_MSG::SUBSCRIBE_MSG);
 		
 		if (!$this->subscriber->getRealName()) {
 			$this->subscriber->RequestRealName();
-			$this->botInterface->sendText((string)$input->user->id, VB_MSG::NAME_REQ_MSG);
+			$this->botInterface->sendText($input->user->id, VB_MSG::NAME_REQ_MSG);
 			return true;
 		}
 
@@ -53,7 +53,7 @@ class ViberBotController extends BotController {
 			$btn->Text = VB_MSG::PHONE_REQ_BTN;
 			$btn->TextSize = "regular";
 			$btn->BgColor = "#d5fbd5";
-			$this->botInterface->sendKeyboard((string)$input->user->id, sprintf(VB_MSG::PHONE_REQ_MSG, $this->subscriber->getRealName()), array($btn));
+			$this->botInterface->sendKeyboard($input->user->id, sprintf(VB_MSG::PHONE_REQ_MSG, $this->subscriber->getRealName()), array($btn));
 			return true;
 		}
 
@@ -67,9 +67,9 @@ class ViberBotController extends BotController {
 		if ((!$this->subscriber) || (!$this->botInterface)) {return false;}
 
 		$input = $this->botInterface->getInput();
-		if ((!is_object($input)) || (!isset($input->user_id))) {return false;}
+		if (!isset($input->user_id)) {return false;}
 
-		$this->subscriber->checkSubscriber((string)$input->user_id);
+		$this->subscriber->checkSubscriber($input->user_id);
 		return $this->subscriber->unsubscribe();
 
 	}
@@ -80,16 +80,16 @@ class ViberBotController extends BotController {
 		if (!$this->botInterface) {return false;}
 
 		$input = $this->botInterface->getInput();
-		if ((!is_object($input)) || (!is_object($input->user)) || (!isset($input->user->id))) {return false;}
+		if (!isset($input->user->id)) {return false;}
 
-		if (!$input->subscribed) {
+		if ($input->subscribed ?? null !== 1) {
 			$btn1 = new \stdClass();
 			$btn1->ActionType = "reply";
 			$btn1->ActionBody = "subscribe";
 			$btn1->Text = VB_MSG::SUBSCRIBE_BTN;
 			$btn1->TextSize = "regular";
 			$btn1->BgColor = "#d5fbd5";
-			return $this->botInterface->sendKeyboard((string)$input->user->id, VB_MSG::CONVERS_STARTED_MSG, array($btn1), true);
+			return $this->botInterface->sendKeyboard($input->user->id, VB_MSG::CONVERS_STARTED_MSG, array($btn1), true);
 		} else {
 			return true;
 		}
@@ -102,20 +102,20 @@ class ViberBotController extends BotController {
 		if ((!$this->subscriber) || (!$this->botInterface)) {return false;}
 
 		$input = $this->botInterface->getInput();
-		if ((!is_object($input)) || (!is_object($input->message)) || (!is_object($input->sender)) || (!isset($input->sender->id))) {return false;}
+		if ((!isset($input->sender->id)) || (!isset($input->message))) {return false;}
 
 		
 		if (isset($input->message->text)) {
-			$this->subscriber->checkSubscriber((string)$input->sender->id, (string)$input->sender->name);
+			$this->subscriber->checkSubscriber($input->sender->id, $input->sender->name ?? null);
 		}
 
 
 		#user send contact
 		if ($input->message->type == "contact") {
-			if (is_object($input->message->contact) && (isset($input->message->contact->phone_number))) {
+			if (isset($input->message->contact->phone_number)) {
 
-				$this->subscriber->savePhone((string)$input->message->contact->phone_number);
-				$this->botInterface->sendText((string)$input->sender->id, VB_MSG::HAS_PHONE_MSG);
+				$this->subscriber->savePhone($input->message->contact->phone_number);
+				$this->botInterface->sendText($input->sender->id, VB_MSG::HAS_PHONE_MSG);
 				$this->adminMsg();
 
 			}
@@ -124,18 +124,18 @@ class ViberBotController extends BotController {
 
 		#user subscribed
 		if ($input->message->text == "subscribe") {
-			$this->botInterface->sendText((string)$input->sender->id, VB_MSG::SUBSCRIBE_MSG);
+			$this->botInterface->sendText($input->sender->id, VB_MSG::SUBSCRIBE_MSG);
 		}
 
 		#user send realname
 		if ($this->subscriber->isRealNameRequested()) {
-			$this->subscriber->setName((string)$input->message->text);
+			$this->subscriber->setName($input->message->text);
 		}
 		
 		#realname required
 		if (!$this->subscriber->getRealName()) {
 			$this->subscriber->RequestRealName();
-			$this->botInterface->sendText((string)$input->sender->id, VB_MSG::NAME_REQ_MSG);
+			$this->botInterface->sendText($input->sender->id, VB_MSG::NAME_REQ_MSG);
 			return true;
 		}
 
@@ -147,12 +147,12 @@ class ViberBotController extends BotController {
 			$btn->Text = VB_MSG::PHONE_REQ_BTN;
 			$btn->TextSize = "regular";
 			$btn->BgColor = "#d5fbd5";
-			$this->botInterface->sendKeyboard((string)$input->sender->id, sprintf(VB_MSG::PHONE_REQ_MSG, $this->subscriber->getRealName()), array($btn));
+			$this->botInterface->sendKeyboard($input->sender->id, sprintf(VB_MSG::PHONE_REQ_MSG, $this->subscriber->getRealName()), array($btn));
 			return true;
 		}
 		
 		#default message
-		$this->botInterface->sendText((string)$input->sender->id, VB_MSG::DEFAULT_MSG);
+		$this->botInterface->sendText($input->sender->id, VB_MSG::DEFAULT_MSG);
 		
 		return true;
 

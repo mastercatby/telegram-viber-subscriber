@@ -14,9 +14,9 @@ class TelegramBotController extends BotController {
 	
 	public function __construct(array $config = array()) {
 
-		parent::__construct($config);
+		parent::__construct();
 		
-		$this->admin_id = (string)$config['admin_id'];
+		$this->admin_id = $config['admin_id'];
 		$this->subscriber = null;
 		
 	}
@@ -34,11 +34,11 @@ class TelegramBotController extends BotController {
 		if ((!$this->botInterface) || (!$this->subscriber)) {return false;}
 
 		$input = $this->botInterface->getInput();
-		if ((!is_object($input)) || (!is_object($input->message)) || (!is_object($input->message->chat)) || (!isset($input->message->chat->id))) {return false;}
+		if (!isset($input->message->chat->id)) {return false;}
 
-		$this->subscriber->checkSubscriber((string)$input->message->chat->id, (string)$input->message->chat->first_name);
+		$this->subscriber->checkSubscriber($input->message->chat->id, $input->message->chat->first_name ?? null);
 
-		$this->botInterface->sendText((string)$input->message->chat->id, TG_MSG::CONVERS_STARTED_MSG, false);
+		$this->botInterface->sendText($input->message->chat->id, TG_MSG::CONVERS_STARTED_MSG, false);
 		
 		return $this->onMessage();
 
@@ -50,10 +50,10 @@ class TelegramBotController extends BotController {
 		if ((!$this->botInterface) || (!$this->subscriber)) {return false;}
 
 		$input = $this->botInterface->getInput();
-		if ((!is_object($input)) || (!is_object($input->my_chat_member)) || (!is_object($input->my_chat_member->chat)) || (!isset($input->my_chat_member->chat->id))) {return false;}
+		if (!isset($input->my_chat_member->chat->id)) {return false;}
 
-		$this->subscriber->checkSubscriber((string)$input->my_chat_member->chat->id, (string)$input->my_chat_member->chat->first_name);
-		return $this->botInterface->sendText((string)$input->my_chat_member->chat->id, TG_MSG::SUBSCRIBE_MSG, true);
+		$this->subscriber->checkSubscriber($input->my_chat_member->chat->id, $input->my_chat_member->chat->first_name ?? null);
+		return $this->botInterface->sendText($input->my_chat_member->chat->id, TG_MSG::SUBSCRIBE_MSG, true);
 
 	}
 
@@ -63,9 +63,9 @@ class TelegramBotController extends BotController {
 		if ((!$this->botInterface) || (!$this->subscriber)) {return false;}
 
 		$input = $this->botInterface->getInput();
-		if ((!is_object($input)) || (!is_object($input->my_chat_member)) || (!is_object($input->my_chat_member->chat)) || (!isset($input->my_chat_member->chat->id))) {return false;}
+		if (!isset($input->my_chat_member->chat->id)) {return false;}
 
-		$this->subscriber->checkSubscriber((string)$input->my_chat_member->chat->id);
+		$this->subscriber->checkSubscriber($input->my_chat_member->chat->id);
 		return $this->subscriber->unsubscribe();
 
 	}
@@ -76,32 +76,30 @@ class TelegramBotController extends BotController {
 		if ((!$this->botInterface) || (!$this->subscriber)) {return false;}
 
 		$input = $this->botInterface->getInput();
-		if ((!is_object($input)) || (!is_object($input->message)) || (!is_object($input->message->chat)) || (!isset($input->message->chat->id))) {return false;}
+		if (!isset($input->message->chat->id)) {return false;}
 
-		$this->subscriber->checkSubscriber((string)$input->message->chat->id, (string)$input->message->chat->first_name);
+		$this->subscriber->checkSubscriber($input->message->chat->id, $input->message->chat->first_name ?? null);
 
 		#user send contact
-		if (is_object($input->message->contact)) {
-			if (isset($input->message->contact->phone_number)) {
+		if (isset($input->message->contact->phone_number)) {
 
-				$this->subscriber->savePhone((string)$input->message->contact->phone_number);
-				$this->botInterface->sendKeyboard((string)$input->message->chat->id, TG_MSG::HAS_PHONE_MSG, ['remove_keyboard' => true], true);
+			$this->subscriber->savePhone($input->message->contact->phone_number);
+			$this->botInterface->sendKeyboard($input->message->chat->id, TG_MSG::HAS_PHONE_MSG, ['remove_keyboard' => true], true);
 
-				$this->adminMsg();
+			$this->adminMsg();
 
-			}
 			return true;		
 		}
 
 		#user send realname
-		if ($this->subscriber->isRealNameRequested()) {
-			$this->subscriber->setName((string)$input->message->text);
+		if (($this->subscriber->isRealNameRequested()) && (isset($input->message->text))) {
+			$this->subscriber->setName($input->message->text);
 		}
 		
 		#realname required
 		if (!$this->subscriber->getRealName()) {
 			$this->subscriber->RequestRealName();
-			$this->botInterface->sendText((string)$input->message->chat->id, TG_MSG::NAME_REQ_MSG, true);
+			$this->botInterface->sendText($input->message->chat->id, TG_MSG::NAME_REQ_MSG, true);
 			return true;
 		}
 
@@ -110,12 +108,12 @@ class TelegramBotController extends BotController {
 			$keyboard = ['keyboard' => array()];
 			array_push($keyboard['keyboard'], array(array('text' => TG_MSG::PHONE_REQ_BTN, 'request_contact' => true)));
 //			$keyboard = json_encode($keyboard);
-			$this->botInterface->sendKeyboard((string)$input->message->chat->id, sprintf(TG_MSG::PHONE_REQ_MSG, $this->subscriber->getRealName()), $keyboard, true);
+			$this->botInterface->sendKeyboard($input->message->chat->id, sprintf(TG_MSG::PHONE_REQ_MSG, $this->subscriber->getRealName()), $keyboard, true);
 			return true;
 		}
 		
 		#default message
-		$this->botInterface->sendText((string)$input->message->chat->id, TG_MSG::DEFAULT_MSG, true);
+		$this->botInterface->sendText($input->message->chat->id, TG_MSG::DEFAULT_MSG, true);
 		
 		return true;
 

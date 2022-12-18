@@ -9,7 +9,7 @@ abstract class BotController {
 	protected ?BotInreface $botInterface;
 	 
 
-	public function __construct(array $config = array()) {
+	public function __construct() {
 
 		$this->botInterface = null;
 

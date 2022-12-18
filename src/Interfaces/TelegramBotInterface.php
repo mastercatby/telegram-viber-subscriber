@@ -13,8 +13,8 @@ class TelegramBotInreface extends BotInreface {
 	public function __construct(array $config = array()) {
 
 		$this->input		= null;
-		$this->auth_token	= (string)$config['auth_token'];
-		$this->debug		= (bool)$config['debug'];
+		$this->auth_token	= $config['auth_token'];
+		$this->debug		= $config['debug'];
 		
 		$this->loadInput();
 	}	
@@ -39,10 +39,10 @@ class TelegramBotInreface extends BotInreface {
 
 	public function getEvent() : string {
 
-		if (!is_object($this->input)) {return '';}
+		if (!$this->input) {return '';}
 
 
-		if ((is_object($this->input->my_chat_member)) && (is_object($this->input->my_chat_member->new_chat_member))) {
+		if (isset($this->input->my_chat_member->new_chat_member)) {
 		
 			$members_status = array('creator', 'administrator', 'member');
 			$non_members_status = array('restricted', 'left', 'kicked');
@@ -58,7 +58,7 @@ class TelegramBotInreface extends BotInreface {
 		}
 
 
-		if (is_object($this->input->message)) {
+		if (isset($this->input->message)) {
 		
 			if ((isset($this->input->message->text)) && ($this->input->message->text == '/start')) {
 				return 'conversation_started';

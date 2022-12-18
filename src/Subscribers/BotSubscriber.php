@@ -73,12 +73,12 @@ class BotSubscriber {
 			
 			$res = $this->repository->loadSubscriber($user_id, $this->getType());
 			if ($res) {
-				$this->user_id		= (string)($res['user_id']);
-				$this->name			= (string)($res['name']);
-				$this->real_name	= (string)($res['real_name']);
-				$this->phone		= (string)($res['phone']);
-				$this->flags		= (int)($res['flags']);
-				$this->subscribed	= (bool)($res['subscribed']);
+				$this->user_id		= $res['user_id'];
+				$this->name			= $res['name'];
+				$this->real_name	= $res['real_name'];
+				$this->phone		= $res['phone'];
+				$this->flags		= $res['flags'];
+				$this->subscribed	= $res['subscribed'];
 			}
 		}
 
@@ -92,7 +92,7 @@ class BotSubscriber {
 		if (!$this->repository) {return false;}
 
 		$this->user_id		= $user_id;
-		$this->name		= $user_name;
+		$this->name			= $user_name;
 		$this->real_name	= '';
 		$this->phone		= '';
 		$this->flags		= 0;
