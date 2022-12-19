@@ -158,7 +158,7 @@ class TelegramBotInterface extends BotInterface {
 
 	protected function log(string $data) : void {
 
-		if ($this->debug) {file_put_contents('data/tg_log.txt', date('Y-m-d H:i:s') . ' - ' . $data . "\n", FILE_APPEND);}
+		if ($this->debug) {file_put_contents(__DIR__ . '/../Logs/tg_log.txt', date('Y-m-d H:i:s') . ' - ' . $data . "\n", FILE_APPEND);}
 	}
 
 }

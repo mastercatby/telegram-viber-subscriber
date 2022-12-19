@@ -139,7 +139,7 @@ class ViberBotInterface extends BotInterface {
 
 	protected function log(string $data) : void {
 
-		if ($this->debug) {file_put_contents('../Logs/vb_log.txt', date('Y-m-d H:i:s') . ' - ' . $data . "\n", FILE_APPEND);}
+		if ($this->debug) {file_put_contents(__DIR__ .'/../Logs/vb_log.txt', date('Y-m-d H:i:s') . ' - ' . $data . "\n", FILE_APPEND);}
 	}
 	
 
