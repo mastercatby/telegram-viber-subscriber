@@ -6,7 +6,8 @@ require_once '../vendor/autoload.php';
 
 if ((!isset($_SERVER['REQUEST_URI'])) || (!isset($_SERVER['HTTP_HOST']))) {return;}
 $http_path = explode('/', $_SERVER['REQUEST_URI']);
-array_pop($http_path);
+array_pop($http_path); array_pop($http_path);
+
 $uri = 'https://' . $_SERVER['HTTP_HOST'] . '/' . implode('/', $http_path) . '/' . VB_CONF::webhook;
 
 $jsonData = 
