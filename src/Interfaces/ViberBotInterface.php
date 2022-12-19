@@ -1,10 +1,10 @@
 <?php
 
 namespace Mastercat\Bots\Interfaces;
-use Mastercat\Bots\Interfaces\BotInreface;
+use Mastercat\Bots\Interfaces\BotInterface;
 
 
-class ViberBotInreface extends BotInreface {
+class ViberBotInterface extends BotInterface {
 
 	protected ?object $input;
 	protected string $auth_token;

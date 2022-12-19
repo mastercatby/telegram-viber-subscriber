@@ -1,12 +1,12 @@
 <?php
 
 namespace Mastercat\Bots\Controllers;
-use Mastercat\Bots\Interfaces\BotInreface;
+use Mastercat\Bots\Interfaces\BotInterface;
 
 
 abstract class BotController {
 
-	protected ?BotInreface $botInterface;
+	protected ?BotInterface $botInterface;
 	 
 
 	public function __construct() {
@@ -16,7 +16,7 @@ abstract class BotController {
 	}
 
 
-	public function setBotInterface(BotInreface $botInterface) : void {
+	public function setBotInterface(BotInterface $botInterface) : void {
 
 		$this->botInterface = $botInterface;
 

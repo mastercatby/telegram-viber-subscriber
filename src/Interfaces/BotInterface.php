@@ -2,7 +2,7 @@
 
 namespace Mastercat\Bots\Interfaces;
 
-abstract class BotInreface {
+abstract class BotInterface {
 
 	abstract public function getInput() : ?object;
 	abstract public function getEvent() : string;

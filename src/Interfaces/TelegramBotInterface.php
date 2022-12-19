@@ -1,9 +1,9 @@
 <?php
 
 namespace Mastercat\Bots\Interfaces;
-use Mastercat\Bots\Interfaces\BotInreface;
+use Mastercat\Bots\Interfaces\BotInterface;
 
-class TelegramBotInreface extends BotInreface {
+class TelegramBotInterface extends BotInterface {
 
 	protected ?object $input;
 	protected string $auth_token;

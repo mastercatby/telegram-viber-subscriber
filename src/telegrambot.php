@@ -2,7 +2,7 @@
 
 namespace Mastercat\Bots;
 use Mastercat\Bots\Controllers\TelegramBotController;
-use Mastercat\Bots\Interfaces\TelegramBotInreface;
+use Mastercat\Bots\Interfaces\TelegramBotInterface;
 use Mastercat\Bots\Repositories\PdoSubscriberRepository;
 use Mastercat\Bots\Subscribers\TelegramSubscriber;
 use Mastercat\Bots\Config\TG_CONF;
@@ -12,7 +12,7 @@ require_once 'vendor/autoload.php';
 header("Content-Type: application/json;charset=utf8");
 
 
-$botInreface = new TelegramBotInreface([
+$botInterface = new TelegramBotInterface([
 	'auth_token'	=> TG_CONF::auth_token, 
 	'debug'			=> TG_CONF::debug
 	]);
@@ -28,6 +28,6 @@ $subscriber->setRepository($subscriberRepository);
 
 $controller = new TelegramBotController(['admin_id' => TG_CONF::admin_id]);
 $controller->setSubscriber($subscriber);	
-$controller->setBotInterface($botInreface);
+$controller->setBotInterface($botInterface);
 
 $controller->dispatch();
