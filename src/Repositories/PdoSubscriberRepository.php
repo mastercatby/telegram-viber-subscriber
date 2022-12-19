@@ -28,18 +28,28 @@ class PdoSubscriberRepository extends SubscriberRepository {
 
 	public function createSubscriber(array $data) : bool {
 
-		return $this->execCmd('INSERT INTO `bot_subscribers` (`user_id`, `name`, `real_name`, `phone`, `subscribed`, `flags`, `messenger_type`)'
-			. ' VALUES (:user_id, :name, :real_name, :phone, :subscribed, :flags, :messenger_type)',
-			$data);
+		$quoted_fields = [];
+		$dotted_fields = [];
+		foreach ($data as $key => $value) {
+			$quoted_fields[] = '`' . $key . '`';
+			$dotted_fields[] = ':' . $key;
+		}
+
+		$query = 'INSERT INTO `bot_subscribers` (' . implode(', ', $quoted_fields) . ') VALUES (' . implode(', ', $dotted_fields) . ')'; 
+		return $this->execCmd($query, $data);
 
 	}
 
 
 	public function updateSubscriber(array $data) : bool {
 
-		return $this->execCmd('UPDATE `bot_subscribers` '
-			. ' SET `subscribed` = :subscribed, `name` = :name, `real_name` = :real_name, `phone` = :phone, `flags` = :flags'
-			. ' WHERE (`user_id` = :user_id) AND (`messenger_type` = :messenger_type)', $data);
+		$fields = [];
+		foreach ($data as $key => $value) {
+			$fields[] = '`' . $key . '` = :' . $key;
+		}
+
+		$query = 'UPDATE `bot_subscribers` SET ' . implode(', ', $fields) . ' WHERE (`user_id` = :user_id) AND (`messenger_type` = :messenger_type)';
+		return $this->execCmd($query, $data);
 
 	}
 
