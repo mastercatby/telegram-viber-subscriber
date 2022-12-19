@@ -2,7 +2,7 @@
 
 namespace Mastercat\Bots;
 use Mastercat\Bots\Config\VB_CONF;
-require_once 'vendor/autoload.php';
+require_once '../vendor/autoload.php';
 
 if ((!isset($_SERVER['REQUEST_URI'])) || (!isset($_SERVER['HTTP_HOST']))) {return;}
 $http_path = explode('/', $_SERVER['REQUEST_URI']);
