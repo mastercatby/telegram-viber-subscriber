@@ -1,9 +1,6 @@
-telegram/config.php
-viber/config.php
 /vendor/
 src/Config/TG_CONF.php
 src/Config/VB_CONF.php
 .htaccess
-psalm.xml
 composer.lock
 composer.json
